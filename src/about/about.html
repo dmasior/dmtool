@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        connect-src 'self';
+        font-src 'self';
+        object-src 'none';
+        frame-src 'none';
+    ">
+    <title>About</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>DMTool</h1>
+<p>Version: 0.1.0</p>
+<a id="open-link" href="https://github.com/dmasior/dmtool">github.com/dmasior/dmtool</a>
+<script>
+  const shell = require('electron').shell;
+  const openLink = document.getElementById('open-link');
+  openLink.addEventListener('click', function (event) {
+    event.preventDefault();
+    shell.openExternal(this.href);
+  });
+</script>
+</body>
+</html>
