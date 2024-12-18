@@ -1,7 +1,7 @@
-const { updateElectronApp } = require('update-electron-app')
+const {updateElectronApp} = require('update-electron-app')
 updateElectronApp();
 
-const { app, Tray, Menu } = require("electron");
+const {app, Tray, Menu} = require("electron");
 const path = require("path");
 
 const createAboutWindow = require("./src/about/about");
@@ -31,7 +31,7 @@ app.whenReady().then(() => {
       label: "Base64 Decode",
       click: () => actions.encDec.base64Decode(),
     },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "URL Encode",
       click: () => actions.encDec.urlEncode(),
@@ -40,16 +40,29 @@ app.whenReady().then(() => {
       label: "URL Decode",
       click: () => actions.encDec.urlDecode(),
     },
-    { type: "separator" },
+    {type: "separator"},
     {
-      label: "JSON Beautify",
-      click: () => actions.json.beautify(),
+      label: "JSON",
+      submenu: [
+        {
+          label: "Beautify",
+          click: () => actions.json.beautify(),
+        },
+        {
+          label: "Minify",
+          click: () => actions.json.minify(),
+        },
+        {
+          label: "Encode",
+          click: () => actions.json.encode(),
+        },
+        {
+          label: "Decode",
+          click: () => actions.json.decode(),
+        },
+      ],
     },
-    {
-      label: "JSON Minify",
-      click: () => actions.json.minify(),
-    },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "Sort ASC",
       click: () => actions.sort.asc(),
@@ -58,7 +71,7 @@ app.whenReady().then(() => {
       label: "Sort DESC",
       click: () => actions.sort.desc(),
     },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "Trim",
       submenu: [
@@ -72,7 +85,7 @@ app.whenReady().then(() => {
         }
       ],
     },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "UUID",
       submenu: [
@@ -84,7 +97,7 @@ app.whenReady().then(() => {
           label: "Detect version",
           click: () => actions.uuid.detect(),
         },
-        { type: "separator" },
+        {type: "separator"},
         {
           label: "New V1",
           click: () => actions.uuid.newV1(),
@@ -101,7 +114,7 @@ app.whenReady().then(() => {
           label: "New V7",
           click: () => actions.uuid.newV7(),
         },
-        { type: "separator" },
+        {type: "separator"},
         {
           label: "Convert V1 to V6",
           click: () => actions.uuid.V1ToV6(),
@@ -112,7 +125,7 @@ app.whenReady().then(() => {
         },
       ],
     },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "Hashing",
       submenu: [
@@ -146,7 +159,7 @@ app.whenReady().then(() => {
         },
       ],
     },
-    { type: "separator" },
+    {type: "separator"},
     {
       label: "About",
       click: () => createAboutWindow(),

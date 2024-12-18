@@ -6,9 +6,9 @@ Tool for developers. Perform operations on your clipboard data with ease.
 
 ## Features
 
-- Base64 Encode/Decode
-- URL Encode/Decode
-- JSON Beautify and Minify
+- Base64 Encode, Decode
+- URL Encode, Decode
+- JSON Encode, Decode, Beautify and Minify
 - Sorting and trimming
 - Generate, validate and detect UUID. Convert between UUID V1 and V6
 - Hashing (MD5, SHA, BLAKE)
