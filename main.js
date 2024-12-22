@@ -24,75 +24,174 @@ app.whenReady().then(() => {
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Base64 Encode",
-      click: () => actions.encDec.base64Encode(),
+      label: "Encode",
+      submenu: [
+        {
+          label: "Hex",
+          click: () => actions.encDec.hexEncode(),
+        },
+        {
+          label: "Base64",
+          click: () => actions.encDec.base64Encode(),
+        },
+        {type: "separator"},
+        {
+          label: "HTML Entities",
+          click: () => actions.encDec.htmlEntities(),
+        },
+        {type: "separator"},
+        {
+          label: "URL Encode",
+          click: () => actions.encDec.urlEncode(),
+        },
+      ],
     },
     {
-      label: "Base64 Decode",
-      click: () => actions.encDec.base64Decode(),
-    },
-    {type: "separator"},
-    {
-      label: "URL Encode",
-      click: () => actions.encDec.urlEncode(),
-    },
-    {
-      label: "URL Decode",
-      click: () => actions.encDec.urlDecode(),
+      label: "Decode",
+      submenu: [
+        {
+          label: "Hex",
+          click: () => actions.encDec.hexDecode(),
+        },
+        {
+          label: "Base64",
+          click: () => actions.encDec.base64Decode(),
+        },
+        {type: "separator"},
+        {
+          label: "HTML Entities",
+          click: () => actions.encDec.htmlEntitiesDecode(),
+        },
+        {type: "separator"},
+        {
+          label: "URL Decode",
+          click: () => actions.encDec.urlDecode(),
+        },
+      ],
     },
     {type: "separator"},
     {
       label: "JSON",
       submenu: [
+        {type: "separator"},
         {
-          label: "Beautify",
-          click: () => actions.json.beautify(),
+          label: "Beautify (2 spaces)",
+          click: () => actions.json.beautifyTwoSpaces(),
+        },
+        {
+          label: "Beautify (tabs)",
+          click: () => actions.json.beautifyTabs(),
         },
         {
           label: "Minify",
           click: () => actions.json.minify(),
         },
+        {type: "separator"},
         {
-          label: "Encode",
-          click: () => actions.json.encode(),
+          label: "Escape",
+          click: () => actions.json.escape(),
         },
         {
-          label: "Decode",
-          click: () => actions.json.decode(),
+          label: "Unescape",
+          click: () => actions.json.unescape(),
+        },
+        {type: "separator"},
+        {
+          label: "Validate",
+          click: () => actions.json.validate(),
         },
       ],
-    },
-    {type: "separator"},
-    {
-      label: "Sort ASC",
-      click: () => actions.sort.asc(),
-    },
-    {
-      label: "Sort DESC",
-      click: () => actions.sort.desc(),
     },
     {type: "separator"},
     {
       label: "Trim",
+      click: () => actions.trim.basic(),
+    },
+    {
+      label: "Slug",
       submenu: [
         {
-          label: "Beginning and ending",
-          click: () => actions.trim.basic(),
+          label: "Replacement: dash (-)",
+          click: () => actions.slug.slugify("-"),
         },
         {
-          label: "Beginning and ending of each line",
-          click: () => actions.trim.lines(),
+          label: "Replacement: underscore (_)",
+          click: () => actions.slug.slugify("_"),
+        },
+      ]
+    },
+    {
+      label: "Case",
+      submenu: [
+        {
+          label: "lowercase",
+          click: () => actions.case.lowercase(),
+        },
+        {
+          label: "UPPERCASE",
+          click: () => actions.case.uppercase(),
+        },
+        {
+          label: "Capitalize first word",
+          click: () => actions.case.sentenceCase(),
+        },
+        {
+          label: "Capitalize each word",
+          click: () => actions.case.capitalize(),
+        },
+        {
+          label: "CamelCase",
+          click: () => actions.case.camelCase(),
+        },
+        {
+          label: "snake_case",
+          click: () => actions.case.snakeCase(),
+        },
+        {
+          label: "kebab-case",
+          click: () => actions.case.kebabCase(),
         }
-      ],
+      ]
+    },
+    {
+      label: "Line",
+      submenu: [
+        {
+          label: "Sort ascending",
+          click: () => actions.line.asc(),
+        },
+        {
+          label: "Sort descending",
+          click: () => actions.line.desc(),
+        },
+        {type: "separator"},
+        {
+          label: "Trim",
+          click: () => actions.line.trim(),
+        },
+        {
+          label: "Reverse",
+          click: () => actions.line.reverse(),
+        },
+        {
+          label: "Count",
+          click: () => actions.line.count(),
+        },
+        {type: "separator"},
+        {
+          label: "Remove empty",
+          click: () => actions.line.removeEmpty(),
+        },
+        {
+          label: "Remove duplicates",
+          click: () => actions.line.removeDuplicates(),
+        }
+      ]
     },
     {type: "separator"},
     {
       label: "UUID",
       submenu: [
-        {
-          label: "Validate",
-          click: () => actions.uuid.validate(),
-        },
         {
           label: "Detect version",
           click: () => actions.uuid.detect(),
@@ -127,7 +226,7 @@ app.whenReady().then(() => {
     },
     {type: "separator"},
     {
-      label: "Hashing",
+      label: "Hash",
       submenu: [
         {
           label: "MD5",
@@ -150,8 +249,16 @@ app.whenReady().then(() => {
           click: () => actions.hash.sha512(),
         },
         {
-          label: "SHA3",
-          click: () => actions.hash.sha3(),
+          label: "SHA3-256",
+          click: () => actions.hash.sha3(256),
+        },
+        {
+          label: "SHA3-384",
+          click: () => actions.hash.sha3(384),
+        },
+        {
+          label: "SHA3-512",
+          click: () => actions.hash.sha3(512),
         },
         {
           label: "Blake",
@@ -174,6 +281,5 @@ app.whenReady().then(() => {
   tray.setToolTip("DMTool");
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
+// Override default behavior of closing all windows when the last one is closed, so the app will continue running in the tray
+app.on("window-all-closed", () => {});

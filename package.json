@@ -1,6 +1,6 @@
 {
   "name": "dmtool",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "main.js",
   "author": "Damian Mąsior",
   "license": "MIT",
@@ -17,6 +17,8 @@
   "dependencies": {
     "blakejs": "^1.2.1",
     "crypto-js": "^4.2.0",
+    "html-entities": "^2.5.2",
+    "slugify": "^1.6.6",
     "update-electron-app": "^3.1.0",
     "uuid": "^11.0.3"
   },

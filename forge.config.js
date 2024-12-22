@@ -18,8 +18,11 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
+      name: '@electron-forge/maker-squirrel',
+    },
+    {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'linux', 'win32'],
+      platforms: ['darwin', 'linux'],
     },
     {
       name: '@electron-forge/maker-deb',

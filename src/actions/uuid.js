@@ -1,4 +1,4 @@
-const { clipboard, Notification } = require("electron");
+const { clipboard, Notification, dialog } = require("electron");
 const uuid = require("uuid");
 
 exports.newV1 = () => {
@@ -38,17 +38,13 @@ exports.V6ToV1 = () => {
 exports.detect = () => {
   const text = clipboard.readText().trim();
   try {
-    clipboard.writeText(`${text} | UUID VERSION: ${uuid.version(text)}`);
+    const version = uuid.version(text);
+    dialog.showMessageBoxSync({
+      type: "info",
+      title: "UUID version",
+      message: `${text}\n\nVersion: ${version}`,
+    });
   } catch (e) {
-    new Notification({ title: "Error", body: e.message }).show();
-  }
-}
-
-exports.validate = () => {
-  const text = clipboard.readText().trim();
-  try {
-    clipboard.writeText(`${text} | UUID VALID: ${uuid.validate(text)}`);
-  } catch (e) {
-    new Notification({ title: "Error", body: e.message }).show();
+    dialog.showErrorBox("Error", e.message);
   }
 }

@@ -6,13 +6,29 @@ Tool for developers. Perform operations on your clipboard data with ease.
 
 ## Features
 
-- Base64 Encode, Decode
-- URL Encode, Decode
-- JSON Encode, Decode, Beautify and Minify
-- Sorting and trimming
-- Generate, validate and detect UUID. Convert between UUID V1 and V6
-- Hashing (MD5, SHA, BLAKE)
-
+- Encode and decode: Base64, Hex, URL, HTML
+- JSON utility functions
+  - Beautify and minify
+  - Escape and unescape
+  - Validate
+- Trim
+- Convert case
+  - Uppercase, lowercase
+  - Capitalize words, sentences
+  - CamelCase, snake_case, kebab-case
+- Line
+  - Count, sort, trim, reverse
+  - Remove empty
+  - Remove duplicates
+- UUID
+  - Generate V1, V4, V6, V7
+  - Validate
+  - Convert between V1 and V6
+- Hash
+  - MD5, SHA1,
+  - SHA256, SHA384, SHA512,
+  - SHA3-256, SHA3-384, SHA3-512,
+  - BLAKE2b
 ## Usage
 
 1. Copy the data you want to perform an operation on

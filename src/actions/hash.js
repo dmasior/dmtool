@@ -33,9 +33,9 @@ exports.sha512 = () => {
   );
 }
 
-exports.sha3 = () => {
+exports.sha3 = (outLen) => {
   clipboard.writeText(
-    cryptojs.SHA3(clipboard.readText()).toString(),
+    cryptojs.SHA3(clipboard.readText(), {outputLength: outLen}).toString(),
   );
 }
 
