@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; object-src 'none'; frame-src 'none';"
+    />
+    <title>Query AI</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: #1e1e1e;
+        color: #d4d4d4;
+      }
+      #prompt-section { flex-shrink: 0; margin-bottom: 8px; }
+      #prompt-input {
+        width: 100%;
+        min-height: 60px;
+        max-height: 120px;
+        resize: vertical;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        background: #2d2d2d;
+        color: #d4d4d4;
+        border: 1px solid #444;
+        border-radius: 4px;
+        padding: 8px;
+        outline: none;
+      }
+      #prompt-input:focus { border-color: #007acc; }
+      #button-bar {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        justify-content: flex-end;
+      }
+      button {
+        padding: 6px 14px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background: #2d2d2d;
+        color: #d4d4d4;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      button:hover { background: #3d3d3d; }
+      button.primary { background: #007acc; border-color: #007acc; color: #fff; }
+      button.primary:hover { background: #006bb3; }
+      #context-section {
+        margin-bottom: 8px;
+        flex-shrink: 0;
+      }
+      #context-label {
+        font-size: 11px;
+        color: #888;
+        margin-bottom: 4px;
+      }
+      #clipboard-context {
+        font-family: monospace;
+        font-size: 12px;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 4px;
+        padding: 8px;
+        max-height: 100px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #999;
+      }
+      #response-section {
+        margin-bottom: 8px;
+        flex-shrink: 0;
+      }
+      #response-label {
+        font-size: 11px;
+        color: #888;
+        margin-bottom: 4px;
+      }
+      #response-text {
+        font-family: monospace;
+        font-size: 12px;
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 4px;
+        padding: 8px;
+        max-height: 100px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: #999;
+      }
+      #spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        color: #888;
+      }
+      #model-info {
+        font-size: 11px;
+        color: #666;
+        text-align: right;
+        padding: 2px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="prompt-section">
+      <textarea id="prompt-input" placeholder="Ask something..." autofocus></textarea>
+      <div id="button-bar">
+        <div id="model-info"></div>
+        <button id="btn-copy" style="display:none" onclick="copyResponse()">Copy response</button>
+        <button id="btn-send" class="primary" onclick="send()">Send</button>
+      </div>
+    </div>
+
+    <div id="context-section">
+      <div id="context-label">Clipboard context:</div>
+      <div id="clipboard-context"></div>
+    </div>
+
+    <div id="response-section" style="display:none">
+      <div id="response-label">Response:</div>
+      <div id="response-text"></div>
+    </div>
+
+    <div id="spinner">Thinking...</div>
+
+    <script>
+      const promptInput = document.getElementById("prompt-input");
+      const responseSection = document.getElementById("response-section");
+      const responseText = document.getElementById("response-text");
+      const clipboardContext = document.getElementById("clipboard-context");
+      const spinner = document.getElementById("spinner");
+      const btnSend = document.getElementById("btn-send");
+      const btnCopy = document.getElementById("btn-copy");
+      window.aiAPI.onModelInfo((model) => {
+        document.getElementById("model-info").textContent = model || "";
+      });
+
+      window.aiAPI.onClipboardContext((text) => {
+        if (text) {
+          const display = text.length > 2000 ? text.substring(0, 2000) + "..." : text;
+          clipboardContext.textContent = display;
+        } else {
+          clipboardContext.textContent = "No text in clipboard";
+        }
+      });
+
+      window.aiAPI.onResponse((data) => {
+        spinner.style.display = "none";
+        responseSection.style.display = "block";
+        responseText.textContent = data;
+        btnCopy.style.display = "inline-block";
+        btnSend.disabled = false;
+        promptInput.value = "";
+      });
+
+      window.aiAPI.onError((msg) => {
+        spinner.style.display = "none";
+        responseSection.style.display = "block";
+        responseText.textContent = "Error: " + msg;
+        btnSend.disabled = false;
+      });
+
+      function send() {
+        const text = promptInput.value.trim();
+        if (!text) return;
+        btnSend.disabled = true;
+        spinner.style.display = "block";
+        window.aiAPI.sendPrompt(text);
+      }
+
+      function copyResponse() {
+        window.aiAPI.copyToClipboard(responseText.textContent);
+      }
+
+      promptInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          send();
+        }
+        if (e.key === "Escape") {
+          window.aiAPI.close();
+        }
+      });
+    </script>
+  </body>
+</html>

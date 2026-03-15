@@ -1,63 +1,26 @@
-const {clipboard, dialog} = require("electron");
+import { clipboard, dialog } from "electron";
+import * as pure from "./json.pure.js";
 
-exports.validate = () => {
+const clipboardTransform = (fn) => {
   try {
-    JSON.parse(clipboard.readText());
-    dialog.showMessageBoxSync({
-      type: "info",
-      title: "JSON",
-      message: "Valid JSON",
-    });
-  } catch (e) {
-    dialog.showMessageBoxSync({
-      type: "info",
-      title: "JSON",
-      message: "Not valid JSON",
-    });
-  }
-}
-
-exports.beautifyTwoSpaces = () => {
-  try {
-    const data = JSON.parse(clipboard.readText());
-    clipboard.writeText(JSON.stringify(data, null, 2));
+    clipboard.writeText(fn(clipboard.readText()));
   } catch (e) {
     dialog.showErrorBox("Error", e.message);
   }
-}
+};
 
-exports.beautifyTabs = () => {
-  try {
-    const data = JSON.parse(clipboard.readText());
-    clipboard.writeText(JSON.stringify(data, null, "\t"));
-  } catch (e) {
-    dialog.showErrorBox("Error", e.message);
-  }
-}
+export const validate = () => {
+  const result = pure.validate(clipboard.readText());
+  dialog.showMessageBoxSync({
+    type: "info",
+    title: "JSON",
+    message: result.valid ? "Valid JSON" : `Not valid JSON\n\n${result.error}`,
+  });
+};
 
-exports.minify = () => {
-  try {
-    const data = JSON.parse(clipboard.readText());
-    clipboard.writeText(JSON.stringify(data));
-  } catch (e) {
-    dialog.showErrorBox("Error", e.message);
-  }
-}
-
-exports.escape = () => {
-  try {
-    const data = clipboard.readText();
-    clipboard.writeText(JSON.stringify(data));
-  } catch (e) {
-    dialog.showErrorBox("Error", e.message);
-  }
-}
-
-exports.unescape = () => {
-  try {
-    const data = JSON.parse(clipboard.readText());
-    clipboard.writeText(data);
-  } catch (e) {
-    dialog.showErrorBox("Error", e.message);
-  }
-}
+export const beautifyTwoSpaces = () =>
+  clipboardTransform(pure.beautifyTwoSpaces);
+export const beautifyTabs = () => clipboardTransform(pure.beautifyTabs);
+export const minify = () => clipboardTransform(pure.minify);
+export const escape = () => clipboardTransform(pure.escape);
+export const unescape = () => clipboardTransform(pure.unescape);

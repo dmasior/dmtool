@@ -1,5 +1,5 @@
-const {clipboard} = require("electron");
+import { clipboard } from "electron";
 
-exports.basic = () => {
+export const basic = () => {
   clipboard.writeText(clipboard.readText().trim());
-}
+};

@@ -1,46 +1,26 @@
-const { clipboard } = require("electron");
-const htmlEntities = require("html-entities");
+import { clipboard } from "electron";
+import { encode, decode } from "html-entities";
 
-exports.hexDecode = () => {
-  clipboard.writeText(
-    Buffer.from(clipboard.readText(), "hex").toString(),
-  );
-}
+export const base64Encode = () => {
+  clipboard.writeText(Buffer.from(clipboard.readText()).toString("base64"));
+};
 
-exports.hexEncode = () => {
-  clipboard.writeText(
-    Buffer.from(clipboard.readText()).toString("hex"),
-  );
-}
+export const base64Decode = () => {
+  clipboard.writeText(Buffer.from(clipboard.readText(), "base64").toString());
+};
 
-exports.base64Encode = () => {
-  clipboard.writeText(
-    Buffer.from(clipboard.readText()).toString("base64"),
-  );
-}
+export const htmlEntitiesEncode = () => {
+  clipboard.writeText(encode(clipboard.readText()));
+};
 
-exports.base64Decode = () => {
-  clipboard.writeText(
-    Buffer.from(clipboard.readText(), "base64").toString()
-  );
-}
+export const htmlEntitiesDecode = () => {
+  clipboard.writeText(decode(clipboard.readText()));
+};
 
-exports.htmlEntities = () => {
-  clipboard.writeText(
-    htmlEntities.encode(clipboard.readText()),
-  );
-}
-
-exports.htmlEntitiesDecode = () => {
-  clipboard.writeText(
-    htmlEntities.decode(clipboard.readText()),
-  );
-}
-
-exports.urlDecode = () => {
+export const urlDecode = () => {
   clipboard.writeText(decodeURIComponent(clipboard.readText()));
-}
+};
 
-exports.urlEncode = () => {
+export const urlEncode = () => {
   clipboard.writeText(encodeURIComponent(clipboard.readText()));
-}
+};

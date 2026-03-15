@@ -1,7 +1,7 @@
-const { clipboard } = require("electron");
-const slugify = require("slugify");
+import { clipboard } from "electron";
+import slugify from "slugify";
 
-exports.slugify = (replacement) => {
+export const slug = (replacement) => {
   const text = clipboard.readText().trim();
   clipboard.writeText(slugify(text, { replacement }));
-}
+};

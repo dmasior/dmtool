@@ -1,50 +1,32 @@
-const { clipboard, Notification, dialog } = require("electron");
-const uuid = require("uuid");
+import { clipboard, dialog } from "electron";
+import { v1, v4, v6, v7, version } from "uuid";
 
-exports.newV1 = () => {
-  clipboard.writeText(uuid.v1());
-}
+export const newV1 = () => {
+  clipboard.writeText(v1());
+};
 
-exports.newV4 = () => {
-  clipboard.writeText(uuid.v4());
-}
+export const newV4 = () => {
+  clipboard.writeText(v4());
+};
 
-exports.newV6 = () => {
-  clipboard.writeText(uuid.v6());
-}
+export const newV6 = () => {
+  clipboard.writeText(v6());
+};
 
-exports.newV7 = () => {
-  clipboard.writeText(uuid.v7());
-}
+export const newV7 = () => {
+  clipboard.writeText(v7());
+};
 
-exports.V1ToV6 = () => {
+export const detect = () => {
   const text = clipboard.readText().trim();
   try {
-    clipboard.writeText(uuid.v1ToV6(text));
-  } catch (e) {
-    new Notification({ title: "Error", body: e.message }).show();
-  }
-}
-
-exports.V6ToV1 = () => {
-  const text = clipboard.readText().trim();
-  try {
-    clipboard.writeText(uuid.v6ToV1(text));
-  } catch (e) {
-    new Notification({ title: "Error", body: e.message }).show();
-  }
-}
-
-exports.detect = () => {
-  const text = clipboard.readText().trim();
-  try {
-    const version = uuid.version(text);
+    const ver = version(text);
     dialog.showMessageBoxSync({
       type: "info",
       title: "UUID version",
-      message: `${text}\n\nVersion: ${version}`,
+      message: `${text}\n\nVersion: ${ver}`,
     });
   } catch (e) {
     dialog.showErrorBox("Error", e.message);
   }
-}
+};
