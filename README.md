@@ -1,39 +1,31 @@
 # DMTool
 
-Tool for developers. Perform operations on your clipboard data with ease.
+A menu bar utility that transforms your clipboard - encode, format, hash, and more.
 
-![dropdown presentation](./assets/dropdown_presentation.png)
+![dropdown presentation](./assets/dropdown.png)
 
 ## Features
 
-- Encode and decode: Base64, Hex, URL, HTML
-- JSON utility functions
-  - Beautify and minify
-  - Escape and unescape
-  - Validate
-- Trim
-- Convert case
-  - Uppercase, lowercase
-  - Capitalize words, sentences
-  - CamelCase, snake_case, kebab-case
-- Line
-  - Count, sort, trim, reverse
-  - Remove empty
-  - Remove duplicates
-- UUID
-  - Generate V1, V4, V6, V7
-  - Validate
-  - Convert between V1 and V6
-- Hash
-  - MD5, SHA1,
-  - SHA256, SHA384, SHA512,
-  - SHA3-256, SHA3-384, SHA3-512,
-  - BLAKE2b
+- **AI** — Query GitHub Copilot models with your clipboard as context
+- **Encoding** — Base64, URL, HTML entities (encode/decode)
+- **JSON** — Validate, beautify, minify, escape/unescape
+- **Lines** — Sort, trim
+- **UUID** — Detect version, generate V1/V4/V6/V7
+- **Hash** — MD5, SHA1
+- **Plugins** — Extend with custom JS plugins (see [PLUGINS.md](PLUGINS.md))
+
 ## Usage
 
-1. Copy the data you want to perform an operation on
-2. Select the operation from the dropdown
-3. Paste the result
+1. Copy text to your clipboard
+2. Click the DMTool icon in the menu bar
+3. Select an operation
+4. The result is automatically copied — just paste
+
+## Plugins
+
+DMTool supports user-defined plugins loaded from `~/.dmtool/plugins/`. Plugins are ES modules that add custom actions to the tray menu. Environment variables can be provided via `~/.dmtool/.env`.
+
+See [PLUGINS.md](PLUGINS.md) for the full plugin API and examples.
 
 ## Download
 

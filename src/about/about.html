@@ -1,38 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' 'unsafe-inline';
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data:;
-        connect-src 'self';
-        font-src 'self';
-        object-src 'none';
-        frame-src 'none';
-    ">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; object-src 'none'; frame-src 'none';"
+    />
     <title>About</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-        }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #1e1e1e;
+        color: #d4d4d4;
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 12px;
+      }
+      a {
+        font-size: 12px;
+        color: #007acc;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
     </style>
-</head>
-<body>
-<h1>DMTool</h1>
-<p>Version: 0.3.0</p>
-<a id="open-link" href="https://github.com/dmasior/dmtool">github.com/dmasior/dmtool</a>
-<script>
-  const shell = require('electron').shell;
-  const openLink = document.getElementById('open-link');
-  openLink.addEventListener('click', function (event) {
-    event.preventDefault();
-    shell.openExternal(this.href);
-  });
-</script>
-</body>
+  </head>
+  <body>
+    <h1>DMTool</h1>
+    <p>Version: 0.4.0</p>
+    <a id="open-link" href="https://github.com/dmasior/dmtool">github.com/dmasior/dmtool</a>
+    <script>
+      const shell = require("electron").shell;
+      const openLink = document.getElementById("open-link");
+      openLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        shell.openExternal(this.href);
+      });
+    </script>
+  </body>
 </html>
