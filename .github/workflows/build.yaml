@@ -25,7 +25,17 @@ jobs:
       - name: Clean install dependencies
         run: npm ci
 
-      - name: Build application
+      - name: Build application (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          npm run make -- --arch x64
+          npm run make -- --arch arm64
+        env:
+          NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+          NUGET_HTTP_CACHE_PATH: ${{ github.workspace }}/.nuget/cache
+
+      - name: Build application (Linux)
+        if: runner.os == 'Linux'
         run: npm run make -- --arch x64,arm64
 
       - name: Upload artifacts
