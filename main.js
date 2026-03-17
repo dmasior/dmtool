@@ -218,6 +218,8 @@ async function restoreSession() {
   }
 }
 
+app.commandLine.appendSwitch("use-mock-keychain");
+
 app.whenReady().then(async () => {
   if (process.platform === "darwin") app.dock.hide();
 
