@@ -147,8 +147,7 @@
 
       window.aiAPI.onClipboardContext((text) => {
         if (text) {
-          const display = text.length > 2000 ? text.substring(0, 2000) + "..." : text;
-          clipboardContext.textContent = display;
+          clipboardContext.textContent = text;
         } else {
           clipboardContext.textContent = "No text in clipboard";
         }

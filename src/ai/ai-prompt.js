@@ -1,23 +1,26 @@
 import { BrowserWindow, ipcMain, clipboard } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
-import { chatCompletion } from "./copilot.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let promptWindow = null;
 let clipboardText = "";
-let currentOAuthToken = null;
+let currentCompletion = null;
 let currentModel = null;
+let currentProvider = null;
 
-export function openPromptWindow(oauthToken, model) {
+export async function openPromptWindow(model, provider, completion) {
+  clipboardText = (await clipboard.readText()) || "";
   if (promptWindow) {
+    promptWindow.webContents.send("ai:clipboard-context", clipboardText);
     promptWindow.focus();
     return;
   }
 
-  currentOAuthToken = oauthToken;
+  currentCompletion = completion;
   currentModel = model;
+  currentProvider = provider;
 
   promptWindow = new BrowserWindow({
     width: 500,
@@ -37,16 +40,16 @@ export function openPromptWindow(oauthToken, model) {
   promptWindow.loadFile(path.join(__dirname, "ai-prompt.html"));
 
   promptWindow.webContents.once("did-finish-load", () => {
-    clipboardText = clipboard.readText() || "";
     promptWindow.webContents.send("ai:clipboard-context", clipboardText);
-    promptWindow.webContents.send("ai:model-info", currentModel);
+    promptWindow.webContents.send("ai:model-info", `${currentProvider} · ${currentModel}`);
   });
 
   promptWindow.on("closed", () => {
     promptWindow = null;
     clipboardText = "";
-    currentOAuthToken = null;
+    currentCompletion = null;
     currentModel = null;
+    currentProvider = null;
   });
 }
 
@@ -58,6 +61,9 @@ const systemMessage = {
 
 function registerIpcHandlers() {
   ipcMain.handle("ai:send-prompt", async (_event, text) => {
+    const window = promptWindow;
+    const completion = currentCompletion;
+    if (!window || _event.sender !== window.webContents || !completion) return;
     const userContent = clipboardText
       ? `Clipboard context:\n\n${clipboardText}\n\n---\n\n${text}`
       : text;
@@ -68,23 +74,19 @@ function registerIpcHandlers() {
     ];
 
     try {
-      const response = await chatCompletion(
-        currentOAuthToken,
-        currentModel,
-        messages
-      );
-      if (promptWindow) {
-        promptWindow.webContents.send("ai:response", response);
+      const response = await completion(messages);
+      if (!window.isDestroyed()) {
+        window.webContents.send("ai:response", response);
       }
     } catch (err) {
-      if (promptWindow) {
-        promptWindow.webContents.send("ai:error", err.message);
+      if (!window.isDestroyed()) {
+        window.webContents.send("ai:error", err.message);
       }
     }
   });
 
   ipcMain.handle("ai:copy-to-clipboard", (_event, text) => {
-    clipboard.writeText(text);
+    return clipboard.writeText(text);
   });
 
   ipcMain.handle("ai:close-window", () => {
