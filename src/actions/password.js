@@ -16,9 +16,9 @@ let symbolMode = false;
 let revision = 0;
 let handlersRegistered = false;
 
-export function generate(length, withSymbols = false) {
+export async function generate(length, withSymbols = false) {
   // Never return or send generated text to a renderer.
-  clipboard.writeText(generatePassword(length, withSymbols));
+  await clipboard.writeText(generatePassword(length, withSymbols));
 }
 
 function settings() {
@@ -46,7 +46,7 @@ function registerIpcHandlers() {
     return { ok: true, settings: settings() };
   });
 
-  ipcMain.handle("password:generate", (event, length, expectedRevision) => {
+  ipcMain.handle("password:generate", async (event, length, expectedRevision) => {
     if (!isTrustedSender(event)) return { ok: false, code: "unauthorized" };
     try {
       validatePasswordLength(length);
@@ -59,12 +59,12 @@ function registerIpcHandlers() {
 
     const window = lengthWindow;
     try {
-      generate(length, symbolMode);
+      await generate(length, symbolMode);
     } catch {
       // Do not expose exception text: errors must never contain a password.
       return { ok: false, code: "generation-failed" };
     }
-    window.close();
+    if (!window.isDestroyed()) window.close();
     return { ok: true };
   });
 

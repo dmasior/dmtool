@@ -1,16 +1,17 @@
 import { clipboard, dialog } from "electron";
 import * as pure from "./json.pure.js";
 
-const clipboardTransform = (fn) => {
+const clipboardTransform = async (fn) => {
   try {
-    clipboard.writeText(fn(clipboard.readText()));
+    const text = await clipboard.readText();
+    await clipboard.writeText(fn(text));
   } catch (e) {
     dialog.showErrorBox("Error", e.message);
   }
 };
 
-export const validate = () => {
-  const result = pure.validate(clipboard.readText());
+export const validate = async () => {
+  const result = pure.validate(await clipboard.readText());
   dialog.showMessageBoxSync({
     type: "info",
     title: "JSON",

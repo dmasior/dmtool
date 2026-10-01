@@ -95,9 +95,9 @@ function buildActionItems(actions, file) {
 
 async function executeAction(action, file) {
   try {
-    const result = await action.fn(clipboard.readText());
+    const result = await action.fn(await clipboard.readText());
     if (typeof result === "string") {
-      clipboard.writeText(result);
+      await clipboard.writeText(result);
     }
   } catch (err) {
     dialog.showErrorBox("Plugin error", `${file}: ${err.message}`);
